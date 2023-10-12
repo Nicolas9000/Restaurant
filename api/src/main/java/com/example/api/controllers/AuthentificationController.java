@@ -4,25 +4,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.api.models.Role;
+import com.example.api.models.Restorer;
 import com.example.api.models.User;
+import com.example.api.response.ResponseHandler;
 import com.example.api.services.AuthenticationService;
 import com.example.api.services.JwtService;
-import com.example.api.services.UserService;
-
-import lombok.extern.slf4j.Slf4j;
+import com.example.api.services.RestorerService;
 
 @RestController
 @RequestMapping("/api/auth")
-@Slf4j
 public class AuthentificationController {
 
     @Autowired
@@ -31,21 +28,33 @@ public class AuthentificationController {
     @Autowired
     JwtService jwtService;
 
-    @PostMapping("signup")
-    public ResponseEntity<String> signup(@RequestBody User user) {
-        try {
-            authenticationService.register(user);
+    @Autowired
+    RestorerService restorerService;
 
-            return ResponseEntity.ok("User created successful");
+    @PostMapping("signup")
+    public ResponseEntity<Object> signup(@RequestBody User user) {
+        try {
+            user.setPassword(authenticationService.passwordHash(user.getPassword()));
+
+            User registeredUser = authenticationService.register(user);
+
+            if (registeredUser.getRole().name() == "ROLE_RESTORER") {
+                Restorer restorer = new Restorer();
+                restorer.setEmail(registeredUser.getEmail());
+                restorer.setUser(registeredUser);
+                restorerService.restorerRegister(restorer);
+            }
+
+            return ResponseHandler.responseBuilder("User created successfull", HttpStatus.OK, null);
 
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseHandler.responseBuilder(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, null);
         }
     }
 
     @PostMapping("signin")
     public ResponseEntity<Object> signin(@RequestBody User user) {
-        log.debug("oui dans la route");
+
         try {
             User findedUser = authenticationService.login(user);
 
@@ -65,24 +74,10 @@ public class AuthentificationController {
             Map<String, String> response = new HashMap<>();
             response.put("token", token);
 
-            return ResponseEntity.ok(response);
+            return ResponseHandler.responseBuilder("Authentication successfull", HttpStatus.OK, response);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseHandler.responseBuilder(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, null);
         }
     }
 
-    @GetMapping("test")
-    public Map<String, String> test() {
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "test");
-        return response;
-    }
-
-
-    @PostMapping("teste")
-    public Map<String, String> teste(@RequestBody String abc) {
-        Map<String, String> response = new HashMap<>();
-        response.put("message", abc);
-        return response;
-    }
 }

@@ -1,0 +1,61 @@
+<form [formGroup]="dishForm" #localForm="ngForm" (ngSubmit)="onSubmit()">
+    <div>
+        <label for="name">Name : </label>
+        <input id="name" type="text" formControlName="name" />
+        <span *ngIf="localForm.submitted && dishForm.get('name')?.invalid">
+            Error name
+        </span>
+    </div>
+    <div>
+        <label for="description">Description : </label>
+        <input id="description" type="text" formControlName="description" />
+        <span
+            *ngIf="localForm.submitted && dishForm.get('description')?.invalid"
+        >
+            Error description
+        </span>
+    </div>
+    <div>
+        <label for="picture">Picture : </label>
+        <input
+            id="picture"
+            type="file"
+            (change)="onFileChange($event)"
+            formControlName="picture"
+        />
+        <span *ngIf="localForm.submitted && !isPictureValid">
+            Error picture
+        </span>
+    </div>
+    <div>
+        <label for="price">Price : </label>
+        <input id="price" type="number" formControlName="price" />
+        <span *ngIf="localForm.submitted && dishForm.get('price')?.invalid">
+            Error price
+        </span>
+    </div>
+
+    <div>
+        <label for="type">Type :</label>
+        <select id="type" formControlName="type">
+            <option value="starter">Starter</option>
+            <option value="dish">Dish</option>
+            <option value="dessert">Dessert</option>
+        </select>
+
+        <span *ngIf="localForm.submitted && dishForm.get('type')?.invalid">
+            Error type
+        </span>
+    </div>
+
+    <div *ngIf="allergens">
+        <label for="allergens">Allergens :</label>
+        <select id="allergens" formControlName="allergens" multiple>
+            <option *ngFor="let allergen of allergens" value="{{ allergen }}">
+                {{ allergen }}
+            </option>
+        </select>
+    </div>
+
+    <button>Submit</button>
+</form>

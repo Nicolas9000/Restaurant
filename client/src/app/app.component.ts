@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from './auth/auth.service';
-import { ApiResponse } from './interfaces/ApiResponse';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -11,11 +11,11 @@ import { ApiResponse } from './interfaces/ApiResponse';
 export class AppComponent implements OnInit {
     title = 'client';
 
-    constructor(private authService: AuthService) {}
-
-    test: ApiResponse<null> | undefined;
+    constructor(private authService: AuthService, private router: Router) {}
 
     ngOnInit(): void {
-        this.authService.test().subscribe((t) => (this.test = t));
+
     }
+
+
 }

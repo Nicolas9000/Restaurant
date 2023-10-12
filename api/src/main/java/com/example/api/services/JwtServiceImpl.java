@@ -1,6 +1,5 @@
 package com.example.api.services;
 
-import java.security.Key;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +14,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.api.models.User;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -25,6 +25,17 @@ public class JwtServiceImpl implements JwtService {
 
     @Value("${token.expirationms}")
     Long jwtExpirationMs;
+
+    @Override
+    public String getAuthorizationToken(HttpServletRequest request) {
+        String authorizationHeader = request.getHeader("Authorization");
+
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            String token = authorizationHeader.substring(7);
+            return token;
+        }
+        return null;
+    }
 
     @Override
     public String generateToken(User user) {
@@ -64,7 +75,6 @@ public class JwtServiceImpl implements JwtService {
 
     public boolean isTokenExpired(String token) {
         DecodedJWT jwt = decodeJwt(token);
-
         return jwt.getExpiresAt().before(new Date());
     }
 

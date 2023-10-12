@@ -1,81 +1,47 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, of, tap, catchError } from 'rxjs';
-import { ApiResponse } from '../interfaces/ApiResponse';
-import { CookieService } from 'ngx-cookie-service';
-import { Login, LoginResponse } from '../interfaces/AuthInterface';
+import { Observable } from 'rxjs';
+import { CookieService } from '../services/cookie/cookie.service';
+import {
+    Login,
+    LoginResponse,
+    Register,
+    RegisterResponse,
+} from '../interfaces/AuthInterface';
+import { ApiResponse } from '../interfaces/ApiResponseInterface';
+import { ApiService } from '../services/api/api.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-    constructor(private http: HttpClient, private cookieService: CookieService) {}
+    constructor(
+        private cookieService: CookieService,
+        private apiService: ApiService
+    ) {}
 
-    private apiUrl: string = 'http://localhost:8080/api/auth';
-
-    isLoggingIn: boolean = false;
-    redirectUrl: string | undefined;
+    private apiUrl: string = '/auth';
 
     httpOptions = {
         headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
     };
 
-    test(): Observable<ApiResponse<null>> {
-        return this.http.get<ApiResponse<null>>(`${this.apiUrl}/test`).pipe(
-            tap((res) => this.log(res)),
-            catchError((error) => this.handleError(error, []))
+    isLoggedIn(): boolean {
+        if (!this.cookieService.getCookie()) {
+            return false;
+        }
+        return true;
+    }
+
+    signup(data: Register): Observable<ApiResponse<RegisterResponse>> {
+        return this.apiService.post<ApiResponse<RegisterResponse>, Register>(
+            `${this.apiUrl}/signup`,
+            data
         );
     }
 
-
-    teste(data: any = "ezzzz"): Observable<ApiResponse<null>> {
-        return this.http
-            .post<ApiResponse<null>>(
-                `${this.apiUrl}/teste`,
-                data,
-                this.httpOptions
-            )
-            .pipe(
-                tap((res) => this.log(res)),
-                catchError((err) => this.handleError(err, []))
-            );
-    }
-
-    signup(data: any): Observable<ApiResponse<null>> {
-        return this.http
-            .post<ApiResponse<null>>(
-                `${this.apiUrl}/signup`,
-                data,
-                this.httpOptions
-            )
-            .pipe(
-                tap((res) => this.log(res)),
-                catchError((err) => this.handleError(err, []))
-            );
-    }
-
-    signin(data: Login): Observable<LoginResponse> {
-        return this.http
-            .post<LoginResponse>(
-                `${this.apiUrl}/signin`,
-                data,
-                this.httpOptions
-            )
-            .pipe(
-                tap((res) => this.log(res)),
-                catchError((err) => this.handleError(err, []))
-            );
-    }
-
-    setCookie(token: string): void {
-        this.cookieService.set('token', token);
-        console.log(this.cookieService.get('token'));
-    }
-
-    private log(response: any) {
-        console.log(response);
-    }
-
-    private handleError(error: Error, errorValue: any) {
-        console.log(error);
-        return of(errorValue);
+    signin(data: Login): Observable<ApiResponse<LoginResponse>> {
+        return this.apiService.post<ApiResponse<LoginResponse>, Login>(
+            `${this.apiUrl}/signin`,
+            data
+        );
     }
 }

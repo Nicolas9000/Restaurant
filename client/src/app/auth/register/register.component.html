@@ -1,1 +1,30 @@
-<p>register works!</p>
+<form [formGroup]="registerForm" #localForm="ngForm" (ngSubmit)="onSubmit()">
+    <div class="field">
+        <label for="name">Name : </label>
+
+        <input id="name" type="text" formControlName="name" />
+        <span *ngIf="localForm.submitted && registerForm.get('name')?.invalid"
+            >Error name
+        </span>
+    </div>
+    <div class="field">
+        <label for="email">Email : </label>
+
+        <input id="email" type="email" formControlName="email" />
+        <span *ngIf="localForm.submitted && registerForm.get('email')?.invalid"
+            >Error email
+        </span>
+    </div>
+    <div>
+        <label for="password">Password : </label>
+        <input id="password" type="password" formControlName="password" />
+        <span
+            *ngIf="localForm.submitted && registerForm.get('password')?.invalid"
+            >Error password
+        </span>
+    </div>
+    <div>
+        <span *ngIf="errorMessage">{{ errorMessage }}</span>
+        <button type="submit">Submit</button>
+    </div>
+</form>

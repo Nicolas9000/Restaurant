@@ -1,0 +1,121 @@
+<form
+    [formGroup]="addRestaurantForm"
+    #localForm="ngForm"
+    (ngSubmit)="onSubmit()"
+    encType="multipart/form-data"
+>
+    <div>
+        <label for="name">Name : </label>
+        <input id="name" type="text" formControlName="name" />
+        <span
+            *ngIf="
+                localForm.submitted && addRestaurantForm.get('name')?.invalid
+            "
+        >
+            Error name
+        </span>
+    </div>
+    <div>
+        <label for="email">Email : </label>
+        <input id="email" type="email" formControlName="email" />
+        <span
+            *ngIf="
+                localForm.submitted && addRestaurantForm.get('email')?.invalid
+            "
+        >
+            Error email
+        </span>
+    </div>
+    <div>
+        <label for="phone">Phone : </label>
+        <input id="phone" type="tel" formControlName="phone" />
+        <span
+            *ngIf="
+                localForm.submitted && addRestaurantForm.get('phone')?.invalid
+            "
+        >
+            Error phone
+        </span>
+    </div>
+    <div>
+        <label for="description">Description : </label>
+        <input id="description" type="text" formControlName="description" />
+        <span
+            *ngIf="
+                localForm.submitted &&
+                addRestaurantForm.get('description')?.invalid
+            "
+        >
+            Error description
+        </span>
+    </div>
+    <div>
+        <label for="picture">Picture : </label>
+        <input
+            id="picture"
+            type="file"
+            (change)="onFileChange($event)"
+            formControlName="picture"
+        />
+        <span
+            *ngIf="
+                localForm.submitted && !isPictureValid
+            "
+        >
+            Error picture
+        </span>
+        
+    </div>
+    <div>
+        <label for="street">Street : </label>
+        <input id="street" type="text" formControlName="street" />
+        <span
+            *ngIf="
+                localForm.submitted && addRestaurantForm.get('street')?.invalid
+            "
+        >
+            Error street
+        </span>
+    </div>
+    <div>
+        <label for="city">City : </label>
+        <input id="city" type="text" formControlName="city" />
+        <span
+            *ngIf="
+                localForm.submitted && addRestaurantForm.get('city')?.invalid
+            "
+        >
+            Error city
+        </span>
+    </div>
+    <div>
+        <label for="zipcode">Zipcode : </label>
+        <input
+            id="zipcode"
+            type="text"
+            formControlName="zipcode"
+            pattern="[0-9]{5}"
+        />
+        <span
+            *ngIf="
+                localForm.submitted && addRestaurantForm.get('zipcode')?.invalid
+            "
+        >
+            Error zipcode
+        </span>
+    </div>
+    <div>
+        <label for="country">Country : </label>
+        <input id="country" type="text" formControlName="country" />
+        <span
+            *ngIf="
+                localForm.submitted && addRestaurantForm.get('country')?.invalid
+            "
+        >
+            Error country
+        </span>
+    </div>
+    <div>
+        <button type="submit">Submit</button>
+    </div>
+</form>

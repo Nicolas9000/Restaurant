@@ -1,0 +1,12 @@
+<form [formGroup]="menuForm" #localForm="ngForm" (ngSubmit)="onSubmit()">
+    <div>
+        <label for="name">Name : </label>
+        <input id="name" type="text" formControlName="name" />
+        <span *ngIf="localForm.submitted && menuForm.get('name')?.invalid">
+            Error name
+        </span>
+    </div>
+    <div>
+        <button type="submit">Submit</button>
+    </div>
+</form>

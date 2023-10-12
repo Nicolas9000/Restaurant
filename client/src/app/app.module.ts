@@ -8,10 +8,18 @@ import { AppComponent } from './app.component';
 import { AuthModule } from './auth/auth.module';
 import { CookieService } from 'ngx-cookie-service';
 import { FormsModule } from '@angular/forms';
+import { RestaurantModule } from './restaurant/restaurant.module';
 
 @NgModule({
     declarations: [AppComponent],
-    imports: [BrowserModule, FormsModule, HttpClientModule, AuthModule, AppRoutingModule],
+    imports: [
+        BrowserModule,
+        FormsModule,
+        HttpClientModule,
+        AuthModule,
+        RestaurantModule,
+        AppRoutingModule,
+    ],
     providers: [CookieService],
     bootstrap: [AppComponent],
 })

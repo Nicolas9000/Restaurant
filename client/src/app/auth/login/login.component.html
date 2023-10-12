@@ -1,23 +1,21 @@
-<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-    <div>
+<form [formGroup]="loginForm" #localForm="ngForm" (ngSubmit)="onSubmit()">
+    <div class="field">
         <label for="email">Email : </label>
-        
-        <input
-            id="email"
-            type="email"
-            formControlName="email"
-            [class.invalid]="loginForm.get('email')?.invalid"
-        />
+
+        <input id="email" type="email" formControlName="email" />
+        <span *ngIf="localForm.submitted && loginForm.get('email')?.invalid"
+            >Error email
+        </span>
     </div>
     <div>
         <label for="password">Password : </label>
-        <input
-            id="password"
-            type="password"
-            formControlName="password"
-        />
+        <input id="password" type="password" formControlName="password" />
+        <span *ngIf="localForm.submitted && loginForm.get('password')?.invalid"
+            >Error password
+        </span>
     </div>
     <div>
+        <span *ngIf="errorMessage">{{ errorMessage }}</span>
         <button type="submit">Submit</button>
     </div>
 </form>

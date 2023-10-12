@@ -1,0 +1,25 @@
+<nav>
+    <button (click)="setTab(1)">My restaurant</button>
+    <button (click)="setTab(2)">Edit</button>
+    <button (click)="setTab(3)">Create menu</button>
+    <button (click)="setTab(4)">Create dish</button>
+</nav>
+
+<div *ngIf="restaurant && tab === 1">
+    <p>{{ restaurant.name }}</p>
+    <p>{{ restaurant.description }}</p>
+    <img class="picture" src="{{ restaurant.picture }}" />
+    <p>{{ restaurant.createdAt | date : "medium" }}</p>
+</div>
+
+<div *ngIf="restaurant && tab === 2">
+    <app-edit-restaurant [restaurant]="restaurant"></app-edit-restaurant>
+</div>
+
+<div *ngIf="restaurant && tab === 3">
+    <app-page-menu></app-page-menu>
+</div>
+
+<div *ngIf="restaurant && tab === 4">
+    <app-page-dish></app-page-dish>
+</div>

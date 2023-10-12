@@ -15,7 +15,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public User register(User user) {
-        user.setPassword(passwordHash(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -25,7 +24,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return userRepository.findByEmail(user.getEmail());
     }
 
-    private String passwordHash(String password) {
+    public String passwordHash(String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
